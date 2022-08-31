@@ -1,6 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-
 import 'cart.dart';
 
 void main() {
@@ -30,7 +31,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final List<String> menuList = ["カレーライス", "タコライス", "クリームシチュー"];
   int _quantity = 1;
+  int _num = 0;
+
   @override
   void initState() {
     super.initState();
@@ -75,6 +79,12 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _randomSet() {
+    setState(() {
+      _num = Random().nextInt(3);
+    });
+  }
+
   getShow() {
     showDialog(
       context: context,
@@ -83,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
           content: SizedBox(
             child: Padding(
               padding: EdgeInsets.only(top: 30, bottom: 10),
-              child: Text("カレーライスの注文を確定しますか？"),
+              child: Text(menuList[_num] + "の注文を確定しますか？"),
             ),
           ),
           actions: <Widget>[
@@ -110,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Cart(num: 0, quantity: _quantity),
+                    builder: (context) => Cart(num: _num, quantity: _quantity),
                   ),
                 );
               },
@@ -123,6 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> stopSevenSeconds() async {
     await Future.delayed(Duration(seconds: 7));
+    _randomSet();
     getShow();
   }
 
