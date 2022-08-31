@@ -179,17 +179,22 @@ class _Cart extends State<Cart> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text(
-                        item.name,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 15),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.25,
+                        child: Text(
+                          item.name,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 13),
+                        ),
                       ),
-                      Text(
-                        (item.price.toString() + "円"),
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w800, fontSize: 20),
+                      SizedBox(
+                        child: Text(
+                          (item.price.toString() + "円"),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w800, fontSize: 20),
+                        ),
                       ),
                     ],
                   ),
