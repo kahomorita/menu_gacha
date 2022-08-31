@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-import 'dragon.dart';
+import 'cart.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,17 +11,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.red,
       ),
-      home: MyHomePage(),
+      home: MyHomePage(flag: false),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key}) : super(key: key);
+  final bool flag;
+  MyHomePage({Key? key, required this.flag}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -29,6 +31,34 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _quantity = 1;
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 1), () {
+      if (widget.flag)
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content: SizedBox(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 30, bottom: 10),
+                    child: Text("注文を完了しました。"),
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('はい'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            });
+    });
+  }
+
   void _incrementCounter() {
     setState(() {
       if (_quantity < 5) {
@@ -60,12 +90,16 @@ class _MyHomePageState extends State<MyHomePage> {
             TextButton(
               child: const Text('いいえ'),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => DiscardItemWidget(),
-                  ),
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Lottie.asset('assets/dragon-fire02.json',
+                        repeat: false);
+                  },
                 );
+                stopSevenSeconds2();
               },
             ),
             TextButton(
@@ -76,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MyHomePage(),
+                    builder: (context) => Cart(num: 0, quantity: _quantity),
                   ),
                 );
               },
@@ -92,11 +126,18 @@ class _MyHomePageState extends State<MyHomePage> {
     getShow();
   }
 
+  Future<void> stopSevenSeconds2() async {
+    await Future.delayed(Duration(seconds: 7));
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("本日発送は15時まで"),
+        backgroundColor: Color.fromRGBO(0xE6, 0x13, 0x10, 1.0),
+        automaticallyImplyLeading: false,
       ),
       body: ListView(
         children: [

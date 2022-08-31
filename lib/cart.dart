@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'main.dart';
 import 'menu.dart';
 
 class Cart extends StatefulWidget {
@@ -89,7 +90,7 @@ class _Cart extends State<Cart> {
   }
 
   Future<String> loadJsonAsset(int num) async {
-    const menuNameList = ["curry.json", "curry.json", "curry.json"];
+    const menuNameList = ["curry.json", "tacorice.json", "crymecitue.json"];
     String data =
         await rootBundle.loadString('assets/images/' + menuNameList[num]);
     return data;
@@ -140,6 +141,7 @@ class _Cart extends State<Cart> {
           _menu.name,
           style: Theme.of(context).textTheme.headline4,
         ),
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.grey[100],
         elevation: 0);
   }
@@ -282,6 +284,43 @@ class _Cart extends State<Cart> {
     );
   }
 
+  getShow() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: SizedBox(
+            child: Padding(
+              padding: EdgeInsets.only(top: 30, bottom: 10),
+              child: Text("注文を確定しますか？"),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('いいえ'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text(
+                'はい',
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyHomePage(flag: true),
+                  ),
+                );
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
   Widget bottomBarButton() {
     return Expanded(
       child: SizedBox(
@@ -293,7 +332,9 @@ class _Cart extends State<Cart> {
             style: ElevatedButton.styleFrom(
               primary: Colors.black,
             ),
-            onPressed: () {},
+            onPressed: () {
+              getShow();
+            },
           ),
         ),
       ),
