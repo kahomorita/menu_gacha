@@ -4,32 +4,32 @@
     {
       "name": "オリーブオイル",
       "price": 30,
-      "images": "no_image.jpeg"
+      "images": "olive-oil.jpeg"
     },
     {
       "name": "合挽き肉",
       "price": 100,
-      "images": "no_image.jpeg"
+      "images": "minced-meat.jpeg"
     },
     {
       "name": "カレー粉",
       "price": 30,
-      "images": "no_image.jpeg"
+      "images": "curry-powder.jpeg"
     },
     {
       "name": "ウスターソース",
       "price": 20,
-      "images": "no_image.jpeg"
+      "images": "worcestershire-sause.jpeg"
     },
     {
       "name": "ケチャップ",
       "price": 10,
-      "images": "no_image.jpeg"
+      "images": "ketchup.jpeg"
     },
     {
       "name": "ニンニク",
       "price": 10,
-      "images": "no_image.jpeg"
+      "images": "garlic.jpg"
     }
   ]
 }

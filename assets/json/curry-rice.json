@@ -4,7 +4,7 @@
     {
       "name": "カレールー",
       "price": 30,
-      "images": "curryru.jpg"
+      "images": "curry-roux.jpg"
     },
     {
       "name": "牛肉",
@@ -24,7 +24,7 @@
     {
       "name": "ニンニク",
       "price": 10,
-      "images": "garic.jpg"
+      "images": "garlic.jpg"
     }
   ]
 }

@@ -4,32 +4,32 @@
     {
       "name": "牛乳",
       "price": 30,
-      "images": "no_image.jpeg"
+      "images": "milk.jpeg"
     },
     {
       "name": "クリームシチューの元",
       "price": 30,
-      "images": "no_image.jpeg"
+      "images": "cream-stew-mix.jpeg"
     },
     {
       "name": "牛肉",
       "price": 100,
-      "images": "no_image.jpeg"
+      "images": "beef.jpg"
     },
     {
       "name": "玉ねぎ",
       "price": 30,
-      "images": "no_image.jpeg"
+      "images": "onion.jpg"
     },
     {
       "name": "人参",
       "price": 20,
-      "images": "no_image.jpeg"
+      "images": "carrot.jpg"
     },
     {
       "name": "ブロッコリー",
       "price": 10,
-      "images": "no_image.jpeg"
+      "images": "broccoli.jpeg"
     }
   ]
 }

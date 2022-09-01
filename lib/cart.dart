@@ -90,9 +90,13 @@ class _Cart extends State<Cart> {
   }
 
   Future<String> loadJsonAsset(int num) async {
-    const menuNameList = ["curry.json", "tacorice.json", "crymecitue.json"];
+    const menuNameList = [
+      "curry-rice.json",
+      "taco-rice.json",
+      "cream-shoe.json"
+    ];
     String data =
-        await rootBundle.loadString('assets/images/' + menuNameList[num]);
+        await rootBundle.loadString('assets/json/' + menuNameList[num]);
     return data;
   }
 
@@ -355,7 +359,7 @@ class EmptyCart extends StatelessWidget {
     return Column(
       children: [
         Image.asset(
-          'assets/images/empty_cart.png',
+          'assets/images/empty-cart.png',
           fit: BoxFit.contain,
         ),
         const SizedBox(height: 30),

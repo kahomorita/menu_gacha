@@ -105,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 showDialog(
                   context: context,
                   builder: (context) {
-                    return Lottie.asset('assets/dragon-fire02.json',
+                    return Lottie.asset('assets/json/dragon-fire02.json',
                         repeat: false);
                   },
                 );
@@ -194,13 +194,14 @@ class _MyHomePageState extends State<MyHomePage> {
               showDialog(
                 context: context,
                 builder: (context) {
-                  return Lottie.asset('assets/gachadora05.json', repeat: false);
+                  return Lottie.asset('assets/json/gacha-dora05.json',
+                      repeat: false);
                 },
               );
               stopSevenSeconds();
             },
             // 対象の画像を記述
-            child: Image.asset('assets/button_start1.png'),
+            child: Image.asset('assets/images/button-start1.png'),
           )
         ],
       ),
