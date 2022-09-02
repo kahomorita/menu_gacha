@@ -38,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(Duration(milliseconds: 500), () {
       if (widget.flag)
         showDialog(
             context: context,
@@ -95,92 +95,98 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: ListView(
         children: [
-          Container(
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(10)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  splashRadius: 10.0,
-                  onPressed: () {
-                    _decrementCounter();
-                  },
-                  icon: const Icon(
-                    Icons.remove,
-                    color: Color(0xFFEC6813),
-                  ),
-                ),
-                Text(
-                  _quantity.toString() + "人前",
-                  style: const TextStyle(
-                      fontSize: 30, fontWeight: FontWeight.w700),
-                ),
-                IconButton(
-                  splashRadius: 10.0,
-                  onPressed: () {
-                    _incrementCounter();
-                  },
-                  icon: const Icon(
-                    Icons.add,
-                    color: Color(0xFFEC6813),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          quantityCount(),
           SizedBox(
             height: 50,
           ),
-          GestureDetector(
-            onTap: () {
-              _randomSet();
-              screenTransitionAnimation(
-                  context, 'assets/json/gacha-dora05.json', () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      content: SizedBox(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 30, bottom: 10),
-                          child: Text(menuList[_num] + "の注文を確定しますか？"),
-                        ),
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          child: const Text('いいえ'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            screenTransitionAnimation(context,
-                                'assets/json/dragon-fire02.json', () {});
-                          },
-                        ),
-                        TextButton(
-                          child: const Text(
-                            'はい',
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    Cart(num: _num, quantity: _quantity),
-                              ),
-                            );
-                          },
-                        )
-                      ],
-                    );
-                  },
-                );
-              });
-            },
-            // 対象の画像を記述
-            child: Image.asset('assets/images/button-start1.png'),
-          )
+          gachaButton(context)
         ],
       ),
+    );
+  }
+
+  Widget quantityCount() {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(10)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          IconButton(
+            splashRadius: 10.0,
+            onPressed: () {
+              _decrementCounter();
+            },
+            icon: const Icon(
+              Icons.remove,
+              color: Color(0xFFEC6813),
+            ),
+          ),
+          Text(
+            _quantity.toString() + "人前",
+            style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
+          ),
+          IconButton(
+            splashRadius: 10.0,
+            onPressed: () {
+              _incrementCounter();
+            },
+            icon: const Icon(
+              Icons.add,
+              color: Color(0xFFEC6813),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget gachaButton(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        _randomSet();
+        screenTransitionAnimation(context, 'assets/json/gacha-dora05.json', () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content: SizedBox(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 30, bottom: 10),
+                    child: Text(menuList[_num] + "の注文を確定しますか？"),
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('いいえ'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      screenTransitionAnimation(
+                          context, 'assets/json/dragon-fire02.json', () {});
+                    },
+                  ),
+                  TextButton(
+                    child: const Text(
+                      'はい',
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              Cart(num: _num, quantity: _quantity),
+                        ),
+                      );
+                    },
+                  )
+                ],
+              );
+            },
+          );
+        });
+      },
+      // 対象の画像を記述
+      child: Image.asset('assets/images/button-start1.png'),
     );
   }
 }

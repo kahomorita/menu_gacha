@@ -211,7 +211,7 @@ class _Cart extends State<Cart> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.25,
+                  width: MediaQuery.of(context).size.width * 0.23,
                   child: Text(
                     item.name,
                     overflow: TextOverflow.ellipsis,
@@ -231,37 +231,40 @@ class _Cart extends State<Cart> {
             ),
           ),
           const Spacer(),
-          Container(
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(10)),
-            child: Row(
-              children: [
-                IconButton(
-                  splashRadius: 10.0,
-                  onPressed: () {
-                    _decrementCounter(item);
-                  },
-                  icon: const Icon(
-                    Icons.remove,
-                    color: Color(0xFFEC6813),
-                  ),
-                ),
-                Text(
-                  item.quantity.toString() + "人前",
-                  style: const TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.w700),
-                ),
-                IconButton(
-                  splashRadius: 10.0,
-                  onPressed: () {
-                    _incrementCounter(item);
-                  },
-                  icon: const Icon(
-                    Icons.add,
-                    color: Color(0xFFEC6813),
-                  ),
-                ),
-              ],
+          quantityCount(item),
+        ],
+      ),
+    );
+  }
+
+  Widget quantityCount(Item item) {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(10)),
+      child: Row(
+        children: [
+          IconButton(
+            splashRadius: 10.0,
+            onPressed: () {
+              _decrementCounter(item);
+            },
+            icon: const Icon(
+              Icons.remove,
+              color: Color(0xFFEC6813),
+            ),
+          ),
+          Text(
+            item.quantity.toString() + "人前",
+            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+          ),
+          IconButton(
+            splashRadius: 10.0,
+            onPressed: () {
+              _incrementCounter(item);
+            },
+            icon: const Icon(
+              Icons.add,
+              color: Color(0xFFEC6813),
             ),
           ),
         ],
