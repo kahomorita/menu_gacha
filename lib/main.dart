@@ -38,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(Duration(milliseconds: 500), () {
       if (widget.flag)
         showDialog(
             context: context,
@@ -85,63 +85,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  getShow() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          content: SizedBox(
-            child: Padding(
-              padding: EdgeInsets.only(top: 30, bottom: 10),
-              child: Text(menuList[_num] + "の注文を確定しますか？"),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('いいえ'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return Lottie.asset('assets/json/dragon-fire02.json',
-                        repeat: false);
-                  },
-                );
-                stopSevenSeconds2();
-              },
-            ),
-            TextButton(
-              child: const Text(
-                'はい',
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Cart(num: _num, quantity: _quantity),
-                  ),
-                );
-              },
-            )
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> stopSevenSeconds() async {
-    await Future.delayed(Duration(seconds: 7));
-    _randomSet();
-    getShow();
-  }
-
-  Future<void> stopSevenSeconds2() async {
-    await Future.delayed(Duration(seconds: 7));
-    Navigator.of(context).pop();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -152,59 +95,164 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: ListView(
         children: [
-          Container(
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(10)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  splashRadius: 10.0,
-                  onPressed: () {
-                    _decrementCounter();
-                  },
-                  icon: const Icon(
-                    Icons.remove,
-                    color: Color(0xFFEC6813),
-                  ),
-                ),
-                Text(
-                  _quantity.toString() + "人前",
-                  style: const TextStyle(
-                      fontSize: 30, fontWeight: FontWeight.w700),
-                ),
-                IconButton(
-                  splashRadius: 10.0,
-                  onPressed: () {
-                    _incrementCounter();
-                  },
-                  icon: const Icon(
-                    Icons.add,
-                    color: Color(0xFFEC6813),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          quantityCount(),
           SizedBox(
             height: 50,
           ),
-          GestureDetector(
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return Lottie.asset('assets/json/gacha-dora05.json',
-                      repeat: false);
-                },
-              );
-              stopSevenSeconds();
-            },
-            // 対象の画像を記述
-            child: Image.asset('assets/images/button-start1.png'),
-          )
+          gachaButton(context)
         ],
       ),
+    );
+  }
+
+  Widget quantityCount() {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(10)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          IconButton(
+            splashRadius: 10.0,
+            onPressed: () {
+              _decrementCounter();
+            },
+            icon: const Icon(
+              Icons.remove,
+              color: Color(0xFFEC6813),
+            ),
+          ),
+          Text(
+            _quantity.toString() + "人前",
+            style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
+          ),
+          IconButton(
+            splashRadius: 10.0,
+            onPressed: () {
+              _incrementCounter();
+            },
+            icon: const Icon(
+              Icons.add,
+              color: Color(0xFFEC6813),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget gachaButton(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        _randomSet();
+        screenTransitionAnimation(context, 'assets/json/gacha-dora05.json', () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content: SizedBox(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 30, bottom: 10),
+                    child: Text(menuList[_num] + "の注文を確定しますか？"),
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('いいえ'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      screenTransitionAnimation(
+                          context, 'assets/json/dragon-fire02.json', () {});
+                    },
+                  ),
+                  TextButton(
+                    child: const Text(
+                      'はい',
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              Cart(num: _num, quantity: _quantity),
+                        ),
+                      );
+                    },
+                  )
+                ],
+              );
+            },
+          );
+        });
+      },
+      // 対象の画像を記述
+      child: Image.asset('assets/images/button-start1.png'),
+    );
+  }
+}
+
+void screenTransitionAnimation(
+    BuildContext context, String lottieName, Function screenTransFunc) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return _LottieAnimation(
+          onAinimCompleted: () {
+            screenTransFunc();
+          },
+          lottieName: lottieName);
+    },
+  );
+}
+
+class _LottieAnimation extends StatefulWidget {
+  const _LottieAnimation({
+    Key? key,
+    required this.onAinimCompleted,
+    required this.lottieName,
+  }) : super(key: key);
+  final Function onAinimCompleted;
+  final String lottieName;
+
+  @override
+  State<_LottieAnimation> createState() => _LottieAnimationState();
+}
+
+class _LottieAnimationState extends State<_LottieAnimation>
+    with TickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final String lottieName;
+
+  @override
+  void initState() {
+    super.initState();
+    lottieName = widget.lottieName;
+    _controller = AnimationController(vsync: this)
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          Navigator.of(context).pop();
+          widget.onAinimCompleted();
+        }
+      });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Lottie.asset(
+      lottieName,
+      controller: _controller,
+      onLoaded: (composition) {
+        setState(() {
+          _controller.duration = composition.duration;
+        });
+        _controller.forward();
+      },
     );
   }
 }

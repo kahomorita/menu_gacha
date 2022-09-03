@@ -28,36 +28,6 @@ class _Cart extends State<Cart> {
     setMenu(widget.num, widget.quantity);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: _appBar(context),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 10,
-            child: _menu.itemList.length == 0
-                ? EmptyCart()
-                : AnimatedList(
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.all(20),
-                    key: _listKey,
-                    initialItemCount: _menu.itemList.length,
-                    itemBuilder: (BuildContext context, int index,
-                        Animation<double> animation) {
-                      return _buildItem(_menu.itemList[index], animation);
-                    },
-                  ),
-          ),
-          bottomBarTitle(),
-          bottomBarButton()
-        ],
-      ),
-    );
-  }
-
   Future<void> setMenu(int? num, int? quantity) async {
     num = num == null ? 0 : num;
     String data = await loadJsonAsset(num);
@@ -130,13 +100,43 @@ class _Cart extends State<Cart> {
     Item removedItem = _menu.itemList.removeAt(removeIndex);
 
     AnimatedListRemovedItemBuilder builder = (context, animation) {
-      return _buildItem(removedItem, animation);
+      return _buildIemList(removedItem, animation);
     };
 
     _listKey.currentState?.removeItem(removeIndex, builder);
     setState(() {
       _update();
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey[100],
+      appBar: _appBar(context),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 10,
+            child: _menu.itemList.length == 0
+                ? EmptyCart()
+                : AnimatedList(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.all(20),
+                    key: _listKey,
+                    initialItemCount: _menu.itemList.length,
+                    itemBuilder: (BuildContext context, int index,
+                        Animation<double> animation) {
+                      return _buildIemList(_menu.itemList[index], animation);
+                    },
+                  ),
+          ),
+          bottomBarTitle(),
+          bottomBarButton()
+        ],
+      ),
+    );
   }
 
   PreferredSizeWidget _appBar(BuildContext context) {
@@ -150,111 +150,121 @@ class _Cart extends State<Cart> {
         elevation: 0);
   }
 
-  Widget _buildItem(Item item, Animation<double> animation) {
+  Widget _buildIemList(Item item, Animation<double> animation) {
     return SizeTransition(
       sizeFactor: animation,
-      child: Stack(
+      child: menuItem(item),
+    );
+  }
+
+  Widget menuItem(Item item) {
+    return Stack(
+      children: [
+        itemContainer(item),
+        Positioned(
+          top: 5,
+          right: 7,
+          child: CircleAvatar(
+            radius: 16,
+            backgroundColor: Colors.black87,
+            child: IconButton(
+              icon: Icon(Icons.close),
+              iconSize: 16,
+              splashRadius: 23,
+              onPressed: () {
+                _deleteItem(item);
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget itemContainer(Item item) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.all(13),
+      height: 120,
+      decoration: BoxDecoration(
+          color: Colors.grey[300]?.withOpacity(0.6),
+          borderRadius: BorderRadius.circular(10)),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Container(
-            margin: const EdgeInsets.only(bottom: 20),
-            padding: const EdgeInsets.all(13),
-            height: 120,
-            decoration: BoxDecoration(
-                color: Colors.grey[300]?.withOpacity(0.6),
-                borderRadius: BorderRadius.circular(10)),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
+            padding: const EdgeInsets.all(0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.asset(
+                "assets/images/" + item.images,
+                width: 80,
+                height: 130,
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Container(
-                  padding: const EdgeInsets.all(0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      "assets/images/" + item.images,
-                      width: 80,
-                      height: 130,
-                      fit: BoxFit.contain,
-                    ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.23,
+                  child: Text(
+                    item.name,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w600, fontSize: 13),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.25,
-                        child: Text(
-                          item.name,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 13),
-                        ),
-                      ),
-                      SizedBox(
-                        child: Text(
-                          (item.price.toString() + "円"),
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w800, fontSize: 20),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const Spacer(),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        splashRadius: 10.0,
-                        onPressed: () {
-                          _decrementCounter(item);
-                        },
-                        icon: const Icon(
-                          Icons.remove,
-                          color: Color(0xFFEC6813),
-                        ),
-                      ),
-                      Text(
-                        item.quantity.toString() + "人前",
-                        style: const TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w700),
-                      ),
-                      IconButton(
-                        splashRadius: 10.0,
-                        onPressed: () {
-                          _incrementCounter(item);
-                        },
-                        icon: const Icon(
-                          Icons.add,
-                          color: Color(0xFFEC6813),
-                        ),
-                      ),
-                    ],
+                SizedBox(
+                  child: Text(
+                    (item.price.toString() + "円"),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w800, fontSize: 20),
                   ),
                 ),
               ],
             ),
           ),
-          Positioned(
-            top: 5,
-            right: 7,
-            child: CircleAvatar(
-              radius: 16,
-              backgroundColor: Colors.black87,
-              child: IconButton(
-                icon: Icon(Icons.close),
-                iconSize: 16,
-                splashRadius: 23,
-                onPressed: () {
-                  _deleteItem(item);
-                },
-              ),
+          const Spacer(),
+          quantityCount(item),
+        ],
+      ),
+    );
+  }
+
+  Widget quantityCount(Item item) {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(10)),
+      child: Row(
+        children: [
+          IconButton(
+            splashRadius: 10.0,
+            onPressed: () {
+              _decrementCounter(item);
+            },
+            icon: const Icon(
+              Icons.remove,
+              color: Color(0xFFEC6813),
+            ),
+          ),
+          Text(
+            item.quantity.toString() + "人前",
+            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+          ),
+          IconButton(
+            splashRadius: 10.0,
+            onPressed: () {
+              _incrementCounter(item);
+            },
+            icon: const Icon(
+              Icons.add,
+              color: Color(0xFFEC6813),
             ),
           ),
         ],
@@ -293,43 +303,6 @@ class _Cart extends State<Cart> {
     );
   }
 
-  getShow() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          content: SizedBox(
-            child: Padding(
-              padding: EdgeInsets.only(top: 30, bottom: 10),
-              child: Text("注文を確定しますか？"),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('いいえ'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text(
-                'はい',
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MyHomePage(flag: true),
-                  ),
-                );
-              },
-            )
-          ],
-        );
-      },
-    );
-  }
-
   Widget bottomBarButton() {
     return Expanded(
       child: SizedBox(
@@ -342,7 +315,40 @@ class _Cart extends State<Cart> {
               primary: Colors.black,
             ),
             onPressed: () {
-              getShow();
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    content: SizedBox(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 30, bottom: 10),
+                        child: Text("注文を確定しますか？"),
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text('いいえ'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      TextButton(
+                        child: const Text(
+                          'はい',
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MyHomePage(flag: true),
+                            ),
+                          );
+                        },
+                      )
+                    ],
+                  );
+                },
+              );
             },
           ),
         ),
